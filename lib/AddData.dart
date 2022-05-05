@@ -1,10 +1,12 @@
 import 'package:farm/db/database_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'bloc/farmer_bloc.dart';
 import 'model/farmer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:farm/event/add_farmer.dart';
 import 'package:farm/model/farmer.dart';
+
 
 class AddData extends StatefulWidget {
 
@@ -19,7 +21,7 @@ class AddData extends StatefulWidget {
 }
 
 class _AddDataState extends State<AddData> {
-  int selectedValue=0;
+  String selectedValue;
   String item = 'Wheat';
   final items=['Wheat', 'Rice', 'Jowar', 'Ragi','Pulses'];
   DateTime date=DateTime(2022,5,5);
@@ -30,7 +32,7 @@ class _AddDataState extends State<AddData> {
   String _crop;
   String _variety;
   String _pdate;
-  String _age;
+  String _age='';
 
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -115,19 +117,19 @@ class _AddDataState extends State<AddData> {
                           child: Text('Gender',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),)),
                       Row(
                         children: <Widget>[
-                          Radio<int>(
-                            value: 1,
-                            groupValue: selectedValue,
+                          Radio<String>(
+                            value: 'male',
+                            groupValue: _gender,
                             onChanged:(value)=>
-                                setState(() =>selectedValue=value,
+                                setState(() =>_gender=value,
                                 ),
                           ),
                           Text('male'),
-                          Radio<int>(
-                            value: 2,
-                            groupValue: selectedValue,
+                          Radio<String>(
+                            value: 'female',
+                            groupValue: _gender,
                             onChanged:(value)=>
-                                setState(() =>selectedValue=value,
+                                setState(() =>_gender=value,
                                 ),
                           ),
                           Text('female'),
@@ -189,7 +191,9 @@ class _AddDataState extends State<AddData> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               value: item,
-                              icon: const Icon(Icons.keyboard_arrow_down,color: Colors.green,textDirection: TextDirection.ltr),
+                              icon: const Icon(Icons.keyboard_arrow_down,color: Colors.green,
+                                  //textDirection: TextDirection.ltr
+                                ),
                               iconSize: 24,
                               elevation: 16,
                               isExpanded: true,
@@ -199,6 +203,7 @@ class _AddDataState extends State<AddData> {
                               onChanged: (String newValue) {
                                 setState(() {
                                   item = newValue;
+                                  _crop=item;
                                 });
                               },
                               items:items.map<DropdownMenuItem<String>>((String value) {
@@ -267,8 +272,11 @@ class _AddDataState extends State<AddData> {
                               //if ok dateTime
                         setState(() {
                           date=newDate;
+                          _pdate=DateFormat('yyyy-mm-dd').format(date);
+                          _age = DateFormat('yyyy-mm-dd').format(date.add(Duration(days: 90)));
 
-                           });
+
+                        });
 
                             },)
                               ],
@@ -276,15 +284,7 @@ class _AddDataState extends State<AddData> {
 
 
                     SizedBox(height: 10),    //AGE OF CROP
-                     TextFormField(
-                        decoration: InputDecoration(
-                        labelText: 'Age of crop',
-                        labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
-                        ),
-
-                        onSaved: (String value) {
-                        _age = value;
-                        },),
+                     Text(_age),
 
               SizedBox(height: 30,),
 
@@ -298,7 +298,13 @@ class _AddDataState extends State<AddData> {
 
                 Farmer farmer = Farmer(
                   name: _name,
+                  gender: _gender,
                   address: _address,
+                  area: _area,
+                  crop: _crop,
+                  variety: _variety,
+                  pdate: _pdate,
+                  age: _age,
 
                 );
 

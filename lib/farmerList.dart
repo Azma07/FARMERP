@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'AddData.dart';
 import 'package:farm/db/database_provider.dart';
-import 'farmerDetail.dart';
 import 'bloc/farmer_bloc.dart';
 import 'event/set_farmer.dart';
 import 'model/farmer.dart';
@@ -26,6 +25,32 @@ class _FarmerListState extends State<FarmerList> {
     );
   }
 
+  showFoodDialog(BuildContext context, Farmer farmer, int index) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(farmer.name),
+        content:Column(
+          children: <Widget>[
+            Text("Gender:   ${farmer.gender}"),
+            Text("Address:   ${farmer.address}"),
+            Text("Plot Area:   ${farmer.area}"),
+            Text("Crop :   ${farmer.crop}"),
+            Text("Varity:   ${farmer.variety}"),
+            Text("Planting date :   ${farmer.pdate}"),
+            Text("Age of crop:   ${farmer.age}"),
+
+
+          ],
+        ),
+
+    ),
+        //Text("ID ${food.id}"),
+
+    //     ],
+    //   ),
+     );
+  }
   @override
   Widget build(BuildContext context) {
     print("Building entire food list scaffold");
@@ -51,14 +76,17 @@ class _FarmerListState extends State<FarmerList> {
                     title: Text(farmer.name, style: TextStyle(fontSize: 26)),
                     //subtitle: Text(farmer.address, style: TextStyle(fontSize: 26)),
                         //showFoodDialog(context, farmer, index),
-                    onTap: (){
-                      var route= new MaterialPageRoute(builder: (BuildContext contex)=>
-                      FarmerDetail(value:farmer.address),);
-                      Navigator.of(context).push(route);
-                    },
+                    onTap: () => showFoodDialog(context, farmer, index),
+                    // onTap: (){
+                    //   var route= new MaterialPageRoute(builder: (BuildContext contex)=>
+                    //   FarmerDetail(value:farmer.address),);
+                    //   Navigator.of(context).push(route);
+                    // },
                   ),
                 );
-              }
+              },
+              itemCount: farmerList.length,
+
             );
           },
           listener: (BuildContext context, farmerList) {},
