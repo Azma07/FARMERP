@@ -33,13 +33,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-
-// class SplashScreen extends State<MyHomePage> {
-//   @override
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }

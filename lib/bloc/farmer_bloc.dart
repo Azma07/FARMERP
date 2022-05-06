@@ -6,12 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class FarmerBloc extends Bloc<FarmerEvent, List<Farmer>> {
-  //FarmerBloc(List<Farmer> initialState) : super(initialState);
 
-  //FarmerBloc(List<Farmer> initialState) : super(initialState);
-
-  //SetFarmers(List<Farmer> farmers) {
-//constructed created
   @override
   List<Farmer> get initialState => List<Farmer>();
 

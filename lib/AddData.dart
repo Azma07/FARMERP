@@ -34,7 +34,7 @@ class _AddDataState extends State<AddData> {
   String _variety;
   String _pdate;
   String _age='0';
-  //int age=0;
+
 
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -68,10 +68,6 @@ class _AddDataState extends State<AddData> {
       _variety = widget.farmer.variety;
       _pdate = widget.farmer.pdate;
       _age = widget.farmer.age;
-
-
-
-
 
     }
   }
@@ -192,8 +188,6 @@ class _AddDataState extends State<AddData> {
               Center(
                 child: Container(
                   height: 60,
-                  //width: 350,
-                  //margin: EdgeInsets.only(top: 10,),
                   padding: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
                     border: Border.all(width: 1.0,color: Colors.grey),

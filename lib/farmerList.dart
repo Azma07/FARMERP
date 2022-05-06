@@ -31,23 +31,40 @@ class _FarmerListState extends State<FarmerList> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(farmer.name),
-        content:Column(
-          children: <Widget>[
-            Text("Gender:   ${farmer.gender}"),
-            Text("Address:   ${farmer.address}"),
-            Text("Plot Area:   ${farmer.area}"),
-            Text("Crop :   ${farmer.crop}"),
-            Text("Varity:   ${farmer.variety}"),
-            Text("Planting date :   ${farmer.pdate}"),
-            Text("Age of crop:   ${farmer.age}"),
+        titlePadding: EdgeInsets.all(0.0),
+        title: Container(child: Center(
+          child: Text(farmer.name,style: TextStyle(color: Colors.white,
+              fontWeight: FontWeight.bold),),
+        ),
+            width: 260.0,
+            height: 50,
+            color: Colors.green),
+        content:Container(
+          width: 260.0,
+          height: 230.0,
+          decoration: new BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: const Color(0xFFFFFF),
+            borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text("Gender:   ${farmer.gender}"),
+              Text("Address:   ${farmer.address}"),
+              Text("Plot Area:   ${farmer.area}"),
+              Text("Crop :   ${farmer.crop}"),
+              Text("Varity:   ${farmer.variety}"),
+              Text("Planting date :   ${farmer.pdate}"),
+              Text("Age of crop:   ${farmer.age}"),
 
 
-          ],
+            ],
+          ),
         ),
 
     ),
-        //Text("ID ${food.id}"),
+
 
     //     ],
     //   ),
@@ -98,7 +115,7 @@ else{
                 return Card(
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16),
-                    title: Text(farmer.name, style: TextStyle(fontSize: 26)),
+                    title: Text(farmer.name, style: TextStyle(fontSize: 20)),
                     onTap: () => showFoodDialog(context, farmer, index),
 
                   ),
