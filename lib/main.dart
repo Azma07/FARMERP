@@ -18,6 +18,13 @@ class MyApp extends StatelessWidget {
     return BlocProvider<FarmerBloc>(
         create: (context) => FarmerBloc(),
         child: MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.green,
+            ).copyWith(
+              secondary: Colors.green[250],
+            ),
+          ),
           home: SplashScreen(),
           debugShowCheckedModeBanner: false,
         ),

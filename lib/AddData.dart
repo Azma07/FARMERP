@@ -1,4 +1,5 @@
 import 'package:farm/db/database_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'bloc/farmer_bloc.dart';
@@ -24,7 +25,7 @@ class _AddDataState extends State<AddData> {
   String selectedValue;
   String item = 'Wheat';
   final items=['Wheat', 'Rice', 'Jowar', 'Ragi','Pulses'];
-  DateTime date=DateTime(2022,5,5);
+  DateTime date=DateTime.now();
   String _name;
   String _gender;
   String _address;
@@ -32,10 +33,28 @@ class _AddDataState extends State<AddData> {
   String _crop;
   String _variety;
   String _pdate;
-  String _age='';
+  String _age='0';
+  //int age=0;
 
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  calculateAge(DateTime birthDate) {
+  DateTime currentDate = DateTime.now();
+  var age = currentDate.year - birthDate.year;
+  int month1 = currentDate.month;
+  int month2 = birthDate.month;
+  if (month2 > month1) {
+    age--;
+  } else if (month1 == month2) {
+    int day1 = currentDate.day;
+    int day2 = birthDate.day;
+    if (day2 > day1) {
+      age--;
+    }
+  }
+  return age;
+}
 
   @override
   void initState() {
@@ -63,7 +82,8 @@ class _AddDataState extends State<AddData> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text('Add New Farmer',style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.w500,  fontFamily: 'Poppins-Regular.ttf'),
+        title: Text('Add New Farmer',style: const TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.w500,  fontFamily: 'Poppins-Regular.ttf'),
+          textAlign: TextAlign.center,
        ),
       ),
       backgroundColor: Colors.white,
@@ -71,267 +91,279 @@ class _AddDataState extends State<AddData> {
         child: Form(
            key: _formKey,
 
-        child: Column(
+        child: Container(
+          margin: EdgeInsets.only(left: 20,right: 20,top: 30),
+          child: Column(
             children: <Widget>[
 
+              //NAME
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  focusColor: Colors.green,
+                    fillColor: Colors.green,
+                    labelText: 'Full Name', labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',)
+                ),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Name is Required';
+                  }
 
+                  return null;
+                },
+                onSaved: (String value) {
+                  _name = value;
+                },
+              ),
+              SizedBox(height: 10),
+
+              //GENDER
               Container(
-                padding: EdgeInsets.only(top:10,bottom: 10,left:0,right: 0),
-                margin: EdgeInsets.only(top: 20,),
-                decoration: BoxDecoration(shape: BoxShape.rectangle,color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      //  offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                  border: Border.all(width: 1, color: Colors.black38),),
-                child: Container(
-                  margin: EdgeInsets.only(left: 20,right: 20),
-                  child: Column(
-                    children: <Widget>[
-
-                      //NAME
-                      TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Full Name', labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',)
+                padding: EdgeInsets.only(right:365, top: 10),
+                  child: Text('Gender',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),)),
+              Row(
+                children: <Widget>[
+                  Radio<String>(
+                    value: 'male',
+                    groupValue: _gender,
+                    onChanged:(value)=>
+                        setState(() =>_gender=value,
                         ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Name is Required';
-                          }
-
-                          return null;
-                        },
-                        onSaved: (String value) {
-                          _name = value;
-                        },
-                      ),
-                      SizedBox(height: 10),
-
-                      //GENDER
-                      Container(
-                        padding: EdgeInsets.only(right:365, top: 10),
-                          child: Text('Gender',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),)),
-                      Row(
-                        children: <Widget>[
-                          Radio<String>(
-                            value: 'male',
-                            groupValue: _gender,
-                            onChanged:(value)=>
-                                setState(() =>_gender=value,
-                                ),
-                          ),
-                          Text('male'),
-                          Radio<String>(
-                            value: 'female',
-                            groupValue: _gender,
-                            onChanged:(value)=>
-                                setState(() =>_gender=value,
-                                ),
-                          ),
-                          Text('female'),
-                        ],
-                      ),
-                     // SizedBox(height: 10),
+                  ),
+                  Text('male'),
+                  Radio<String>(
+                    value: 'female',
+                    groupValue: _gender,
+                    onChanged:(value)=>
+                        setState(() =>_gender=value,
+                        ),
+                  ),
+                  Text('female'),
+                ],
+              ),
+             // SizedBox(height: 10),
 
 
-                      //ADRESS
-                      TextFormField(
+              //ADRESS
+              TextFormField(
             decoration: InputDecoration(
+                border: OutlineInputBorder(),
+
                 labelText: 'Adress', labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf')
             ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Address is Required';
-                          }
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Address is Required';
+                  }
 
-                          return null;
-                        },
-                        onSaved: (String value) {
-                          _address=value;
-                        },
-                      ),
+                  return null;
+                },
+                onSaved: (String value) {
+                  _address=value;
+                },
+              ),
 
-                      SizedBox(height: 10),
+              SizedBox(height: 10),
 
-                      //AREA
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Plot Area',
-                            labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
+              //AREA
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+
+                  labelText: 'Plot Area',
+                    labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
+                ),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'area is Required';
+                  }
+
+                  return null;
+                },
+                onSaved: (String value) {
+                  _area = value;
+                },
+              ),
+              SizedBox(height: 10),
+
+
+              //CROP
+              Center(
+                child: Container(
+                  height: 60,
+                  //width: 350,
+                  //margin: EdgeInsets.only(top: 10,),
+                  padding: EdgeInsets.only(left: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1.0,color: Colors.grey),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: item,
+                      icon: const Icon(Icons.keyboard_arrow_down,color: Colors.green,
+                          //textDirection: TextDirection.ltr
                         ),
-                        keyboardType: TextInputType.numberWithOptions(decimal: true),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'area is Required';
-                          }
-
-                          return null;
-                        },
-                        onSaved: (String value) {
-                          _area = value;
-                        },
+                      iconSize: 24,
+                      elevation: 16,
+                      isExpanded: true,
+                      style: const TextStyle(
+                          color: Colors.black
                       ),
-                      SizedBox(height: 10),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          item = newValue;
+                          _crop=item;
+                        });
+                      },
+                      items:items.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      })
+                          .toList(),
+                    ),
+                  ),
 
+                ),
+              ),
 
-                      //CROP
-                      Center(
-                        child: Container(
-                          height: 50,
-                          //width: 350,
-                          margin: EdgeInsets.only(top: 15,),
-                          padding: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1.0,color: Colors.grey),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: item,
-                              icon: const Icon(Icons.keyboard_arrow_down,color: Colors.green,
-                                  //textDirection: TextDirection.ltr
-                                ),
-                              iconSize: 24,
-                              elevation: 16,
-                              isExpanded: true,
-                              style: const TextStyle(
-                                  color: Colors.black
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  item = newValue;
-                                  _crop=item;
-                                });
-                              },
-                              items:items.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              })
-                                  .toList(),
-                            ),
-                          ),
+              SizedBox(height: 10),
 
-                        ),
-                      ),
+              //VARIETY
+              TextFormField(
 
-                      SizedBox(height: 10),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
 
-                      //VARIETY
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Variety',
-                          labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Variety is Required';
-                          }
+                  labelText: 'Variety',
+                  labelStyle: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
+                ),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Variety is Required';
+                  }
 
-                          return null;
-                        },
-                        onSaved: (String value) {
-                          _variety = value;
-                        },
-                      ),
-                      SizedBox(height: 10),
+                  return null;
+                },
+                onSaved: (String value) {
+                  _variety = value;
+                },
+              ),
+              SizedBox(height: 10),
 
       //planting DATE
-                       Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Text(
-                              'Planting date',
-                            style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf'),
-                          ),
-
-
-                          Text('${date.year}/${date.month}/${date.day}',
-                          style:TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf')),
-                        ],
-                      ),
-
-
-                      Row(
-                        children: <Widget>[
-
-                          SizedBox(width: 50),
-                          ElevatedButton( child: Text('Select Date'),
-                            onPressed: ()async{
-                           DateTime newDate= await showDatePicker(context: context,
-                                initialDate: date,
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2023),
-                            );
-                           //if cancel =>null
-                              if(newDate == null) return;
-                              //if ok dateTime
-                        setState(() {
-                          date=newDate;
-                          _pdate=DateFormat('yyyy-mm-dd').format(date);
-                          _age = DateFormat('yyyy-mm-dd').format(date.add(Duration(days: 90)));
-
-
-                        });
-
-                            },)
-                              ],
-                              ),
-
-
-                    SizedBox(height: 10),    //AGE OF CROP
-                     Text(_age),
-
-              SizedBox(height: 30,),
-
-
-              TextButton(onPressed: (){
-                if (!_formKey.currentState.validate()) {
-                  return;
-                }
-
-                _formKey.currentState.save();
-
-                Farmer farmer = Farmer(
-                  name: _name,
-                  gender: _gender,
-                  address: _address,
-                  area: _area,
-                  crop: _crop,
-                  variety: _variety,
-                  pdate: _pdate,
-                  age: _age,
-
-                );
-
-                DatabaseProvider.db.insert(farmer).then(
-                      (storedFarmer) =>
-                      BlocProvider.of<FarmerBloc>(context).add(
-                        AddFarmer(storedFarmer),
-                      ),
-                );
-
-                Navigator.pop(context);
-              },
-                 style:   TextButton.styleFrom(backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 130)),
-                  child: Text('Add Data', style: TextStyle(color:Colors.white),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                      'Planting Date:',
+                    style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',fontWeight: FontWeight.w400),
                   ),
-               ),
+
+                  //SizedBox(width: 10),
+                  Text('${date.year}-${date.month}-${date.day}',
+                  style:TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',fontWeight: FontWeight.w400,color: Colors.green)),
+
+                  //SizedBox(width: 120),
+
+                  ElevatedButton( child: Text('Select Date'),
+                    onPressed: ()async{
+                      DateTime newDate= await showDatePicker(context: context,
+                        initialDate: date,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2023),
+                      );
+                      //if cancel =>null
+                      if(newDate == null) return;
+                      //if ok dateTime
+                      setState(() {
+                        date=newDate;
+                        _pdate=DateFormat('yyyy-mm-dd').format(date);
+                        int a=calculateAge(date);
+                        _age=a.toString();
+                       // _age=DateFormat('yyyy-mm-dd').format(calculateAge(date));
+
+                       // _age = DateFormat('yyyy-mm-dd').format(date.add(Duration(days: 90)));
+
+
+                      }
+
+                      );
+
+                    },
+                  )
+                ],
+              ),
+
+
+
+
+            SizedBox(height: 10),
+
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+
+
+                children: <Widget>[
+                  Text('Age of crop',style: TextStyle(fontSize: 16,
+                      fontFamily: 'Poppins-Regular.ttf',
+                      fontWeight: FontWeight.w400)),
+                  SizedBox(width: 100),
+                  Text('$_age',style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',
+                      fontWeight: FontWeight.w400,
+                  color: Colors.green)),
+
+                ],
+              ),
+              //AGE OF CROP
+            // Text('Age of crop:   $_age',style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Regular.ttf',fontWeight: FontWeight.w400),),
+
+               SizedBox(height: 30,),
+
+
+        TextButton(onPressed: (){
+        if (!_formKey.currentState.validate()) {
+          return;
+        }
+
+        _formKey.currentState.save();
+
+        Farmer farmer = Farmer(
+          name: _name,
+          gender: _gender,
+          address: _address,
+          area: _area,
+          crop: _crop,
+          variety: _variety,
+          pdate: _pdate,
+          age: _age,
+
+        );
+
+        DatabaseProvider.db.insert(farmer).then(
+              (storedFarmer) =>
+              BlocProvider.of<FarmerBloc>(context).add(
+                AddFarmer(storedFarmer),
+              ),
+        );
+
+        Navigator.pop(context);
+        },
+         style:   TextButton.styleFrom(backgroundColor: Colors.green,
+            padding: EdgeInsets.symmetric(horizontal: 130)),
+          child: Text('Add Data', style: TextStyle(color:Colors.white),
+            textAlign: TextAlign.start,
+          ),
+         ),
 
 
             ],
 
           ),
         ),
-      ),
-
-      ]
-      ),
     ),
       ),
     );

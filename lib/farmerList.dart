@@ -5,6 +5,8 @@ import 'package:farm/db/database_provider.dart';
 import 'bloc/farmer_bloc.dart';
 import 'event/set_farmer.dart';
 import 'model/farmer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 class FarmerList extends StatefulWidget {
@@ -51,9 +53,32 @@ class _FarmerListState extends State<FarmerList> {
     //   ),
      );
   }
+
+  void getData()
+ async {
+    http.Response response = await http.get('https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=20fc9a5f5eb3c17be643768c388fa815');
+if(response.statusCode==200){
+  String data =response.body;
+
+  var decodedData=jsonDecode(data);
+
+  var temprature= decodedData['main']['temp'];
+  var condition= decodedData['weather'][0]['id'];
+  var cityName=decodedData['name'];
+  print(temprature);
+  print(condition);
+  print(cityName);
+
+}
+else{
+  print(response.statusCode);
+}
+  }
   @override
   Widget build(BuildContext context) {
-    print("Building entire food list scaffold");
+    print("Building entire farmer list scaffold");
+    getData();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("FARMER LIST"),
@@ -74,14 +99,8 @@ class _FarmerListState extends State<FarmerList> {
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16),
                     title: Text(farmer.name, style: TextStyle(fontSize: 26)),
-                    //subtitle: Text(farmer.address, style: TextStyle(fontSize: 26)),
-                        //showFoodDialog(context, farmer, index),
                     onTap: () => showFoodDialog(context, farmer, index),
-                    // onTap: (){
-                    //   var route= new MaterialPageRoute(builder: (BuildContext contex)=>
-                    //   FarmerDetail(value:farmer.address),);
-                    //   Navigator.of(context).push(route);
-                    // },
+
                   ),
                 );
               },
